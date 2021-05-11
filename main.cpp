@@ -18,15 +18,16 @@ int main() {
 
 
     Eigen::Vector3f receiver(0, 200, 0);
-    Eigen::Vector3f heliostat(0, 0, -200);
+    Eigen::Vector3f heliostat(0, 2.57, 0);
 
     float altitude = 47.041;
     float azimuth = 142.400;
 
-
-    float angle = calculateSHRAngle(receiver, heliostat, altitude, azimuth);
-
-    cout << angle << endl;
+    for (int i = 50; i <= 1200; i += 50) {
+        heliostat.x() = i;
+        float angle = calculateSHRAngle(receiver, heliostat, altitude, azimuth);
+        cout << angle << endl;
+    }
     return 0;
 }
 
@@ -34,9 +35,9 @@ float calculateSHRAngle(Eigen::Vector3f receiver, Eigen::Vector3f heliostat, flo
     altitude = altitude / 180.0f * M_PI;
     azimuth = azimuth / 180.0f * M_PI;
     Eigen::Vector3f sun;
-    sun.x() = cos(altitude) * sin(azimuth);
+    sun.x() = abs(cos(altitude)) * sin(azimuth);
     sun.y() = sin(altitude);
-    sun.z() = cos(altitude) * cos(azimuth);
+    sun.z() = abs(cos(altitude)) * cos(azimuth);
     sun.normalize();
     Eigen::Vector3f helio_rec = receiver - heliostat;
     helio_rec.normalize();
